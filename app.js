@@ -91,6 +91,7 @@ app.use((req, res, next) => {
 });
 
 // Route handlers
+app.use("/ai", require("./routes/ai").createAIRouter());
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);

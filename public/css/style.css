@@ -140,3 +140,10 @@ body { margin: 0; padding: 0; }
 .search-filters label { display: block; font-weight: 600; margin-bottom: .4rem; }
 .navbar { min-height: 5rem; height: auto; }
 @media (max-width: 991px) { .navbar-collapse { padding: 1rem 0; background: white; } }
+.stay-finder { max-width: 720px; padding: clamp(1rem, 4vw, 2rem); border: 1px solid #e4e0da; border-radius: 20px; background: #fffdf9; }
+.stay-finder h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); letter-spacing: -.04em; }
+.finder-eyebrow { font-size: .75rem; font-weight: 700; letter-spacing: .12em; color: #784934; }
+.finder-note { padding: 1.2rem; border-radius: 12px; background: #f1ede6; }
+.stay-finder textarea { resize: vertical; }
+.stay-finder small { color: #5a5149; }
+:focus-visible { outline: 3px solid #8b3d23; outline-offset: 3px; }

@@ -52,6 +52,8 @@
 <body>
   <section aria-label="Search results" class="mt-4">
     <h1>Find your next stay</h1>
+    <p><a href="/ai/stay-finder">Try the AI stay finder</a> or use the filters below.</p>
+    <% if (aiSearch) { %><div class="alert alert-info" role="status">AI filled in these filters. Check them before choosing a stay. Dates, amenities and guest capacity were not checked.</div><% } %>
     <form action="/listings" method="GET" class="search-filters" aria-label="Filter stays">
       <div><label for="destination">Destination or stay name</label><input class="form-control" id="destination" name="q" maxlength="100" value="<%= filters.q %>" placeholder="City, country or stay name"></div>
       <div><label for="min-price">Min / night (INR)</label><input class="form-control" id="min-price" name="minPrice" type="number" min="0" max="10000000" step="0.01" value="<%= filters.minPrice ?? '' %>"></div>

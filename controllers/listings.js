@@ -17,7 +17,7 @@ module.exports.index = async (req, res) => {
     for (const key of ["minPrice", "maxPrice"]) if (filters[key] !== null) params.set(key, filters[key]);
     return `/listings?${params}`;
   };
-  res.render("listings/index.ejs", { allListings, filters, total, pageCount, pageUrl });
+  res.render("listings/index.ejs", { allListings, filters, total, pageCount, pageUrl, aiSearch: req.query.ai === "1" });
 };
 
 module.exports.renderNewForm = (req, res) => {

@@ -1,0 +1,28 @@
+<% layout('/layouts/boilerplate') %>
+<section class="stay-finder my-4 mx-auto" aria-labelledby="finder-heading">
+  <a href="/listings">Back to stays</a>
+  <p class="finder-eyebrow mt-4">WANDERLUST / AI STAY FINDER</p>
+  <h1 id="finder-heading">Describe your next stay.</h1>
+  <p>Turn a destination and nightly budget into search filters. Every result comes from Wanderlust listings.</p>
+  <% if (error) { %><div class="alert alert-warning" role="alert"><%= error %></div><% } %>
+  <% if (!aiEnabled) { %>
+    <div class="alert alert-info" role="status">AI is not set up yet. <a href="/listings">Search with destination and budget filters</a> instead.</div>
+  <% } else if (!currUser) { %>
+    <p><a class="btn btn-dark" href="/login">Log in to use AI</a> <a class="ms-3" href="/listings">Search without AI</a></p>
+  <% } else { %>
+    <form action="/ai/stay-finder" method="POST" id="ai-stay-form">
+      <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
+      <label for="trip-prompt" class="form-label fw-semibold">Where would you like to stay?</label>
+      <textarea class="form-control" id="trip-prompt" name="prompt" rows="4" minlength="8" maxlength="500" required placeholder="A stay in Goa under INR 3,000 per night" aria-describedby="prompt-help prompt-count"></textarea>
+      <div class="d-flex justify-content-between mt-2"><small id="prompt-help">Use INR per night. Leave out personal or payment details.</small><small id="prompt-count">0 / 500</small></div>
+      <div class="form-check my-4">
+        <input class="form-check-input" type="checkbox" name="consent" value="yes" id="ai-consent" required>
+        <label class="form-check-label" for="ai-consent">Send this description to Google Gemini. Free-tier prompts may be used to improve Google's products. Wanderlust does not save the description. Avoid personal information.</label>
+      </div>
+      <button class="btn btn-dark" type="submit" id="ai-submit">Find my stays</button>
+      <p id="ai-progress" role="status" class="mt-2"></p>
+    </form>
+  <% } %>
+  <aside class="finder-note mt-4"><h2 class="h5">You stay in control.</h2><p>AI can misread your request. Review and edit the destination and budget in the results. This finder cannot check dates, guest capacity, amenities or bookings. Prices shown are per night before tax.</p><a href="/listings">Use the filters without AI</a></aside>
+</section>
+<script src="/js/stay-finder.js" defer></script>
