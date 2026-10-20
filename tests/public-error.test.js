@@ -1,0 +1,3 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const format=require('../utils/publicError');
+test('production errors never expose provider or database internals',()=>{assert.deepEqual(format(new Error('database credentials'),true),{status:500,message:'Something went wrong. Please try again.'});});
+test('invalid status codes and validation/upload failures are safe',()=>{assert.equal(format({statusCode:999,message:'bad'},true).status,500);assert.equal(format({name:'ValidationError',message:'internal'}).status,400);assert.equal(format({name:'MulterError'}).status,400);assert.equal(format({status:413}).status,413);});
