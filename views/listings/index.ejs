@@ -61,6 +61,7 @@
     </form>
     <p class="text-muted mt-2">Prices are per night before tax. Listings do not confirm date availability, guest capacity or amenities.</p>
     <% if (filters.q) { %><p>Results for "<%= filters.q %>"</p><% } %>
+    <p role="status"><%= total %> stay<%= total === 1 ? "" : "s" %> found</p>
     <% if (!allListings.length) { %><p>No stays match these filters. Try another destination or <a href="/listings">clear all filters</a>.</p><% } %>
   </section>
   <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
@@ -87,5 +88,12 @@
       </a>
     <% } %>
   </div>
+<% if (pageCount > 1) { %>
+<nav aria-label="Results pages" class="d-flex gap-3 my-4">
+  <% if (filters.page > 1) { %><a rel="prev" href="<%= pageUrl(filters.page - 1) %>">Previous</a><% } %>
+  <span>Page <%= filters.page %> of <%= pageCount %></span>
+  <% if (filters.page < pageCount) { %><a rel="next" href="<%= pageUrl(filters.page + 1) %>">Next</a><% } %>
+</nav>
+<% } %>
 </body>
 

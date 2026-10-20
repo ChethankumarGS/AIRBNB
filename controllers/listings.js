@@ -3,11 +3,21 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
-const { parseFilters, buildQuery, SORTS } = require("../services/listingSearch");
+const { parseFilters, buildQuery, SORTS, PAGE_SIZE } = require("../services/listingSearch");
 module.exports.index = async (req, res) => {
   const filters = parseFilters(req.query);
-  const allListings = await Listing.find(buildQuery(filters)).sort(SORTS[filters.sort]);
-  res.render("listings/index.ejs", { allListings, filters });
+  const query = buildQuery(filters);
+  const total = await Listing.countDocuments(query);
+  const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  filters.page = Math.min(filters.page, pageCount);
+  const allListings = await Listing.find(query).sort(SORTS[filters.sort])
+    .skip((filters.page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
+  const pageUrl = (page) => {
+    const params = new URLSearchParams({ q: filters.q, sort: filters.sort, page: String(page) });
+    for (const key of ["minPrice", "maxPrice"]) if (filters[key] !== null) params.set(key, filters[key]);
+    return `/listings?${params}`;
+  };
+  res.render("listings/index.ejs", { allListings, filters, total, pageCount, pageUrl });
 };
 
 module.exports.renderNewForm = (req, res) => {
