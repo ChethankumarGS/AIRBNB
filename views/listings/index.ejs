@@ -52,6 +52,14 @@
 <body>
   <section aria-label="Search results" class="mt-4">
     <h1>Find your next stay</h1>
+    <form action="/listings" method="GET" class="search-filters" aria-label="Filter stays">
+      <div><label for="destination">Destination or stay name</label><input class="form-control" id="destination" name="q" maxlength="100" value="<%= filters.q %>" placeholder="City, country or stay name"></div>
+      <div><label for="min-price">Min / night (INR)</label><input class="form-control" id="min-price" name="minPrice" type="number" min="0" max="10000000" step="0.01" value="<%= filters.minPrice ?? '' %>"></div>
+      <div><label for="max-price">Max / night (INR)</label><input class="form-control" id="max-price" name="maxPrice" type="number" min="0" max="10000000" step="0.01" value="<%= filters.maxPrice ?? '' %>"></div>
+      <div><label for="sort">Sort by</label><select class="form-select" id="sort" name="sort"><% for (const [value, label] of [['newest','Newest'],['price-asc','Price: low to high'],['price-desc','Price: high to low']]) { %><option value="<%= value %>" <%= filters.sort === value ? 'selected' : '' %>><%= label %></option><% } %></select></div>
+      <button class="btn btn-dark" type="submit">Find stays</button><a href="/listings">Clear filters</a>
+    </form>
+    <p class="text-muted mt-2">Prices are per night before tax. Listings do not confirm date availability, guest capacity or amenities.</p>
     <% if (filters.q) { %><p>Results for "<%= filters.q %>"</p><% } %>
     <% if (!allListings.length) { %><p>No stays match these filters. Try another destination or <a href="/listings">clear all filters</a>.</p><% } %>
   </section>

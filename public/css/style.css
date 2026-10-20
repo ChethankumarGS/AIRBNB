@@ -133,3 +133,10 @@ body { margin: 0; padding: 0; }
   body { margin: 0; padding: 0; }
 #map { height: auto;
     width: 10vh}; */
+
+.search-filters { display: flex; gap: 1rem; flex-wrap: wrap; align-items: end; margin: 1.5rem 0; }
+.search-filters > div { flex: 1 1 150px; }
+.search-filters > div:first-child { flex: 2 1 220px; }
+.search-filters label { display: block; font-weight: 600; margin-bottom: .4rem; }
+.navbar { min-height: 5rem; height: auto; }
+@media (max-width: 991px) { .navbar-collapse { padding: 1rem 0; background: white; } }

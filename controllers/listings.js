@@ -3,10 +3,10 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
-const { parseFilters, buildQuery } = require("../services/listingSearch");
+const { parseFilters, buildQuery, SORTS } = require("../services/listingSearch");
 module.exports.index = async (req, res) => {
   const filters = parseFilters(req.query);
-  const allListings = await Listing.find(buildQuery(filters));
+  const allListings = await Listing.find(buildQuery(filters)).sort(SORTS[filters.sort]);
   res.render("listings/index.ejs", { allListings, filters });
 };
 
