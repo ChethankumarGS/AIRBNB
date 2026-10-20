@@ -3,7 +3,7 @@ if (!mapToken) {
     console.error("Mapbox access token is missing.");
   }
   
-  if (!listing || !listing.geometry || !listing.geometry.coordinates) {
+  if (!mapToken || !listing || !listing.geometry || !listing.geometry.coordinates) {
     console.error("Listing data or coordinates are missing.");
   } else {
     // Initialize the map
@@ -21,9 +21,7 @@ if (!mapToken) {
       .setLngLat(listing.geometry.coordinates) // Marker position
       .setPopup(
         new mapboxgl.Popup({ offset: 25 }) // Add popup
-          .setHTML(
-            `<h4>${listing.title}</h4><p>Exact Location will be provided after booking</p>`
-          )
+          .setText(`${listing.title}. Location supplied by the listing owner.`)
       )
       .addTo(map);
   

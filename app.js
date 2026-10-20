@@ -23,6 +23,7 @@ const reviewRouter = require("./routes/review");
 const userRouter = require("./routes/user");
 
 const app = express();
+app.locals.safeJson = require("./utils/safeJson");
 
 // Database connection
 const dbUrl = process.env.ATLASDB_URL || "mongodb://localhost:27017/mydatabase";
