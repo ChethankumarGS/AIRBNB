@@ -1,55 +1,4 @@
 <% layout("/layouts/boilerplate") %>
-<%= success %>
-<body>
-
-  <style>
-    /* Container for filters */
-    .filters {
-      display: flex;
-      flex-wrap: wrap; /* Allows wrapping if there are too many filters */
-      gap: 2rem; /* Adds spacing between filter items */
-      padding: 1rem;
-      justify-content: flex-start; /* Align items to the start */
-      align-items: center;
-    }
-
-
-    /* Individual filter item */
-    .filter {
-      text-align: center;
-      opacity: 0.7;
-      transition: opacity 0.3s ease; /* Smooth hover effect */
-    }
-
-    .filter:hover {
-      opacity: 1;
-      cursor: pointer;
-    }
-
-    .filter p {
-      font-size: 0.8rem;
-      margin: 0.5rem 0 0; /* Add some spacing below the icon */
-    }
-
-    .tax-info{
-      display: none;
-    }
-
- .tax-toggle{
-  border: 1px solid black;
-  border-radius: 1rem;
-  height: 3.25rem;
-  padding: 1rem;
-  margin-left: 5rem;
-  display: flex;
-  align-items: center;
- }
-
-  </style>
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
   <section aria-label="Search results" class="mt-4">
     <h1>Find your next stay</h1>
     <p><a href="/ai/stay-finder">Try the AI stay finder</a> or use the filters below.</p>
@@ -71,19 +20,19 @@
       <a href="/listings/<%= listing._id %>" class="listing-link">
         <div class="card col">
           <!-- Dynamic image URL with fallback -->
-          <img src="<%= listing.image?.url || '/default-image.jpg' %>" 
+          <img src="<%= listing.image?.url || '/images/stay-placeholder.svg' %>" 
                class="card-img-top" 
                alt="<%= listing.title || 'Listing Image' %>"
-               style="height: 20rem;" 
-               onerror="this.onerror=null; this.src='/default-image.jpg';" />
+               loading="lazy" decoding="async" width="800" height="600" style="height: 20rem;" 
+               onerror="this.onerror=null; this.src='/images/stay-placeholder.svg';" />
                
           <div class="card-img-overlay"></div>
           <div class="card-body">
             <p class="card-text">
               <b><%= listing.title || 'Untitled Listing' %></b> <br/>
               <!-- Fallback for missing price -->
-              &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : 'Price not available' %> / night
-              <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
+              &#8377; <%= listing.price != null ? listing.price.toLocaleString("en-IN") : 'Price not available' %> / night
+              <br><span class="text-muted"><%= listing.location %>, <%= listing.country %></span>
             </p>
           </div>
         </div>
@@ -97,5 +46,5 @@
   <% if (filters.page < pageCount) { %><a rel="next" href="<%= pageUrl(filters.page + 1) %>">Next</a><% } %>
 </nav>
 <% } %>
-</body>
+
 

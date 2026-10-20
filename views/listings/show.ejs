@@ -13,12 +13,12 @@
       src="<%= listing.image.url %>" 
       class="card-img-top show-img" 
       alt="listing_image"
-      onerror="this.onerror=null; this.src='/default-image.jpg';"
+      onerror="this.onerror=null; this.src='/images/stay-placeholder.svg';"
     >
     <div class="card-body">
       <p class="card-text">
         <p class="card-text"> <%= listing.description %> <br> </p>
-        <p class="card-text"> <%= listing.price ? listing.price.toLocaleString("en-IN") : 'Price not available' %> <br></p>
+        <p class="card-text"> <%= listing.price != null ? listing.price.toLocaleString("en-IN") : 'Price not available' %> <br></p>
         <p class="card-text"> <%= listing.location %> <br></p>
         <p class="card-text"> <%= listing.country %> <br></p>
       </p>
