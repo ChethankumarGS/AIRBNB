@@ -9,6 +9,9 @@ const { isLoggedIn,isReviewAuthor } = require("../middleware.js");
 
 const reviewController = require("../controllers/reviews.js");
 
+router.use(require("../utils/validateObjectIds")("id"));
+router.use("/:reviewId", require("../utils/validateObjectIds")("reviewId"));
+
 // Create Reviews
 router.post(
   "/",

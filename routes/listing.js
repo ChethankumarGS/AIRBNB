@@ -7,6 +7,7 @@ const listingController = require("../controllers/listings.js");
 const multer = require('multer')
 const {storage} = require("../cloudConfig.js");
 const upload = multer({ storage });
+router.use("/:id", require("../utils/validateObjectIds")("id"));
 router
   .route("/")
   .get(wrapAsync(listingController.index))
@@ -28,7 +29,7 @@ router
   .delete(isLoggedIn, isOwner, wrapAsync(listingController.destroyListing));
 
 // Editing the listings
-console.log(listingController);
+
 
 router.get(
   "/:id/edit",
