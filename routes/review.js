@@ -15,6 +15,7 @@ router.use("/:reviewId", require("../utils/validateObjectIds")("reviewId"));
 // Create Reviews
 router.post(
   "/",
+  isLoggedIn,
   validateReview,
   wrapAsync(reviewController.createReview));
 
@@ -22,6 +23,7 @@ router.post(
 router.delete(
   "/:reviewId",
   isLoggedIn,
+  isReviewAuthor,
   wrapAsync(reviewController.destroyReview));
 
 module.exports = router;
