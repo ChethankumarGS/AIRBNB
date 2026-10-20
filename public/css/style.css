@@ -147,3 +147,5 @@ body { margin: 0; padding: 0; }
 .stay-finder textarea { resize: vertical; }
 .stay-finder small { color: #5a5149; }
 :focus-visible { outline: 3px solid #8b3d23; outline-offset: 3px; }
+#prompt-count { white-space: nowrap; flex-shrink: 0; margin-left: .75rem; }
+.f-info-links { gap: 1rem; }
