@@ -101,8 +101,11 @@ app.use((err, req, res, next) => {
   res.status(status).render("error.ejs", { message });
 });
 
-// Start server
+// Start server only when run directly; Vercel imports the app instead.
 const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`🚀 Server is running on port ${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`🚀 Server is running on port ${port}`);
+  });
+}
+module.exports = app;
