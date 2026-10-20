@@ -15,7 +15,7 @@
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input 
-          name="listing[title]" 
+          id="title" name="listing[title]" required maxlength="120" 
           placeholder="Add your Title" 
           type="text" 
           class="form-control" />
@@ -24,7 +24,7 @@
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
         <textarea
-          name="listing[description]"
+          id="description" name="listing[description]" required maxlength="2000"
           class="form-control"
           placeholder="enter description"></textarea>
       </div>
@@ -32,7 +32,7 @@
       <div class="mb-3">
         <label for="image" class="form-label">Upload Listing Image </label>
         <input 
-          name="listing[image]"
+          id="image" name="listing[image]" accept="image/png,image/jpeg"
           type="file" 
           class="form-control" 
           required />
@@ -43,7 +43,7 @@
      <div class="mb-3 col-md-4">
           <label for="price" class="form-label">Price</label>
           <input 
-            name="listing[price]" 
+            id="price" name="listing[price]" required min="0" max="10000000" step="0.01" 
             placeholder="1500" 
             type="number" 
             class="form-control" />
@@ -52,7 +52,7 @@
         <div class="mb-3 col-md-8" > 
           <label for="country" class="form-label">Country</label>
           <input 
-            name="listing[country]"
+            id="country" name="listing[country]" required maxlength="120"
             placeholder="India" 
             type="text" 
             class="form-control" />
@@ -64,7 +64,7 @@
       <div class="mb-3">
         <label for="location" class="form-label">Location</label>
         <input
-          name="listing[location]" 
+          id="location" name="listing[location]" required maxlength="120" 
           placeholder="Bengaluru,Karnataka" 
           type="text" 
           class="form-control" />
