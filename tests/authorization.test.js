@@ -1,4 +1,4 @@
-const {test}=require('node:test');const assert=require('node:assert/strict');const Listing=require('../models/listing');const Review=require('../models/review');const {isOwner,isReviewAuthor}=require('../middleware');
+const {test}=require('node:test');const assert=require('node:assert/strict');const Listing=require('../models/listing');const Review=require('../models/review');const {isOwner,isReviewAuthor}=require('../appMiddleware');
 const run=(handler,req)=>new Promise(resolve=>handler(req,{},resolve));
 test('missing listings produce 404 and query failures reach middleware',async t=>{
  t.mock.method(Listing,'findById',async()=>null);assert.equal((await run(isOwner,{params:{id:'a'},user:{_id:'u'}})).statusCode,404);

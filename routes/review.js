@@ -5,7 +5,7 @@ const Listing = require("../models/listing.js");
 const Review = require("../models/review.js");
 const wrapAsync = require("../utils/wrapAsync");
 const validateReview = require("../utils/validateReview.js");
-const { isLoggedIn,isReviewAuthor } = require("../middleware.js");
+const { isLoggedIn,isReviewAuthor } = require("../appMiddleware.js");
 
 const reviewController = require("../controllers/reviews.js");
 
