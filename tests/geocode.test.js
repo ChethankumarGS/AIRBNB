@@ -1,0 +1,4 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const geocode=require('../utils/geocodeListing');
+const details={location:'Goa',country:'India'};const client=geometry=>({forwardGeocode:query=>{assert.equal(query.query,'Goa, India');return {send:async()=>({body:{features:geometry?[{geometry}]:[]}})};}});
+test('geocoding uses city and country and returns valid coordinates',async()=>{const geometry={type:'Point',coordinates:[73.8,15.5]};assert.deepEqual(await geocode(client(geometry),details),geometry);});
+test('unknown locations and malformed coordinates are rejected',async()=>{for(const geometry of [null,{type:'Point',coordinates:[999,3]},{type:'LineString',coordinates:[2,3]},{type:'Point',coordinates:[2]}]) await assert.rejects(geocode(client(geometry),details),/could not find/);});

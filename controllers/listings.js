@@ -46,12 +46,7 @@ module.exports.showListing = async (req, res) => {
 module.exports.createListing = async (req, res) => {
   const details = cleanListing(req.body.listing);
   if (!req.file) throw new (require("../utils/ExpressError"))(400, "Upload a listing image.");
-  let response = await geocodingClient
-    .forwardGeocode({
-      query: `${details.location}, ${details.country}`,
-      limit: 1,
-    })
-    .send();
+  const geometry = await require("../utils/geocodeListing")(geocodingClient, details);
 
   let url = req.file.path;
   let filename = req.file.filename;
@@ -59,7 +54,7 @@ module.exports.createListing = async (req, res) => {
   newListing.owner = req.user._id;
   newListing.image = { url, filename };
 
-  newListing.geometry = response.body.features[0].geometry;
+  newListing.geometry = geometry;
 
    let savedListing = await newListing.save();
 
@@ -82,7 +77,9 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateListing = async (req, res, next) => {
   const { id } = req.params;
-  let listing = await Listing.findByIdAndUpdate(id, { $set: cleanListing(req.body.listing) }, { new: true, runValidators: true });
+  const details = cleanListing(req.body.listing);
+  const geometry = await require("../utils/geocodeListing")(geocodingClient, details);
+  let listing = await Listing.findByIdAndUpdate(id, { $set: { ...details, geometry } }, { new: true, runValidators: true });
 
   if (!listing) throw new (require("../utils/ExpressError"))(404, "Listing not found.");
 
