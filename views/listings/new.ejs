@@ -14,10 +14,10 @@
     <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
-        <input 
-          id="title" name="listing[title]" required maxlength="120" 
-          placeholder="Add your Title" 
-          type="text" 
+        <input
+          id="title" name="listing[title]" required maxlength="120"
+          placeholder="Add your Title"
+          type="text"
           class="form-control" />
       </div>
 
@@ -31,10 +31,10 @@
 
       <div class="mb-3">
         <label for="image" class="form-label">Upload Listing Image </label>
-        <input 
+        <input
           id="image" name="listing[image]" accept="image/png,image/jpeg"
-          type="file" 
-          class="form-control" 
+          type="file"
+          class="form-control"
           required />
       </div>
 
@@ -42,31 +42,31 @@
       <div class="row">
      <div class="mb-3 col-md-4">
           <label for="price" class="form-label">Price</label>
-          <input 
-            id="price" name="listing[price]" required min="0" max="10000000" step="0.01" 
-            placeholder="1500" 
-            type="number" 
+          <input
+            id="price" name="listing[price]" required min="0" max="10000000" step="0.01"
+            placeholder="1500"
+            type="number"
             class="form-control" />
         </div>
 
-        <div class="mb-3 col-md-8" > 
+        <div class="mb-3 col-md-8" >
           <label for="country" class="form-label">Country</label>
-          <input 
+          <input
             id="country" name="listing[country]" required maxlength="120"
-            placeholder="India" 
-            type="text" 
+            placeholder="India"
+            type="text"
             class="form-control" />
         </div>
 
       </div>
-      
+
 
       <div class="mb-3">
         <label for="location" class="form-label">Location</label>
         <input
-          id="location" name="listing[location]" required maxlength="120" 
-          placeholder="Bengaluru,Karnataka" 
-          type="text" 
+          id="location" name="listing[location]" required maxlength="120"
+          placeholder="Bengaluru,Karnataka"
+          type="text"
           class="form-control" />
       </div>
       <br><br>

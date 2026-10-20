@@ -20,12 +20,12 @@
       <a href="/listings/<%= listing._id %>" class="listing-link">
         <div class="card col">
           <!-- Dynamic image URL with fallback -->
-          <img src="<%= listing.image?.url || '/images/stay-placeholder.svg' %>" 
-               class="card-img-top" 
+          <img src="<%= listing.image?.url || '/images/stay-placeholder.svg' %>"
+               class="card-img-top"
                alt="<%= listing.title || 'Listing Image' %>"
-               loading="lazy" decoding="async" width="800" height="600" style="height: 20rem;" 
+               loading="lazy" decoding="async" width="800" height="600" style="height: 20rem;"
                onerror="this.onerror=null; this.src='/images/stay-placeholder.svg';" />
-               
+
           <div class="card-img-overlay"></div>
           <div class="card-body">
             <p class="card-text">
@@ -46,5 +46,3 @@
   <% if (filters.page < pageCount) { %><a rel="next" href="<%= pageUrl(filters.page + 1) %>">Next</a><% } %>
 </nav>
 <% } %>
-
-
