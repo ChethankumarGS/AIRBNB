@@ -2,9 +2,9 @@
 
 Wanderlust is an Airbnb-style stay-listing platform. Browse places to stay, post your own listing with photos, see it on a map, and leave reviews.
 
-**Live demo:** https://wanderlust-s9l5.onrender.com/listings
+**Live demo:** https://wanderlust-tan-ten.vercel.app/listings
 
-> The demo runs on a free Render instance, so the first load after a quiet period can take a minute while it wakes up.
+**AI stay finder:** https://wanderlust-tan-ten.vercel.app/ai/stay-finder
 
 ## Features
 
