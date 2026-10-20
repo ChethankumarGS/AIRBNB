@@ -1,0 +1,4 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const ejs=require('ejs');const path=require('node:path');
+const render=locals=>ejs.renderFile(path.join(__dirname,'../views/listings/stay-finder.ejs'),{layout:()=>{},csrfToken:'token',error:null,...locals});
+test('AI disabled and signed-out states never expose a prompt submission form',async()=>{assert.ok(!(await render({aiEnabled:false,currUser:{}})).includes('id="ai-stay-form"'));assert.ok(!(await render({aiEnabled:true,currUser:null})).includes('id="ai-stay-form"'));});
+test('enabled AI exposes consent, input limits and the manual fallback',async()=>{const html=await render({aiEnabled:true,currUser:{}});assert.match(html,/maxlength="500"/);assert.match(html,/Google Gemini/);assert.match(html,/name="consent"/);assert.match(html,/name="csrfToken"/);assert.match(html,/Use the filters without AI/);});

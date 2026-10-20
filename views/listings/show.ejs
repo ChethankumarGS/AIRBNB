@@ -1,8 +1,7 @@
 <% layout("/layouts/boilerplate") %>
 <script>
-  const mapToken = "<%= process.env.MAP_TOKEN %>";
-  const listing = <%- JSON.stringify(listing) %>;
-  const listingLocation = <%- JSON.stringify(listing.location) %>; // Renamed to avoid conflict
+  const mapToken = <%- safeJson(process.env.MAP_TOKEN || '') %>;
+  const listing = <%- safeJson({ title: listing.title, geometry: listing.geometry }) %>;
 </script>
 
 <div class="row mt-3">
@@ -14,12 +13,12 @@
       src="<%= listing.image.url %>" 
       class="card-img-top show-img" 
       alt="listing_image"
-      onerror="this.onerror=null; this.src='/default-image.jpg';"
+      onerror="this.onerror=null; this.src='/images/stay-placeholder.svg';"
     >
     <div class="card-body">
       <p class="card-text">
         <p class="card-text"> <%= listing.description %> <br> </p>
-        <p class="card-text"> <%= listing.price ? listing.price.toLocaleString("en-IN") : 'Price not available' %> <br></p>
+        <p class="card-text"> <%= listing.price != null ? listing.price.toLocaleString("en-IN") : 'Price not available' %> <br></p>
         <p class="card-text"> <%= listing.location %> <br></p>
         <p class="card-text"> <%= listing.country %> <br></p>
       </p>
@@ -77,11 +76,13 @@
             <p>Comment: <%= review.comment %></p>
             <p>Created At: <%= review.createdAt %></p>
           </div>
+          <% if (currUser && review.author && review.author._id.equals(currUser._id)) { %>
           <form 
             class="mb-3 ms-2"
             method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
             <button class="btn btn-sm btn-dark">Delete</button>
           </form>
+          <% } %>
         </div>
       <% }); %>
     <% } else { %>

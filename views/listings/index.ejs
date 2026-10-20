@@ -1,145 +1,48 @@
 <% layout("/layouts/boilerplate") %>
-<%= success %>
-<body>
-
-  <style>
-    /* Container for filters */
-    .filters {
-      display: flex;
-      flex-wrap: wrap; /* Allows wrapping if there are too many filters */
-      gap: 2rem; /* Adds spacing between filter items */
-      padding: 1rem;
-      justify-content: flex-start; /* Align items to the start */
-      align-items: center;
-    }
-
-
-    /* Individual filter item */
-    .filter {
-      text-align: center;
-      opacity: 0.7;
-      transition: opacity 0.3s ease; /* Smooth hover effect */
-    }
-
-    .filter:hover {
-      opacity: 1;
-      cursor: pointer;
-    }
-
-    .filter p {
-      font-size: 0.8rem;
-      margin: 0.5rem 0 0; /* Add some spacing below the icon */
-    }
-
-    .tax-info{
-      display: none;
-    }
-
- .tax-toggle{
-  border: 1px solid black;
-  border-radius: 1rem;
-  height: 3.25rem;
-  padding: 1rem;
-  margin-left: 5rem;
-  display: flex;
-  align-items: center;
- }
-
-  </style>
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-  <!-- Filters Section -->
-  <div class="filters">
-    <!-- <div class="filter">
-      <div><i class="fa-solid fa-fire"></i></div>
-      <p>Trending</p>
-    </div> -->
-    <div class="filter">
-      <div><i class="fa-solid fa-bed"></i></div>
-      <p>Rooms</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-mountain-city"></i></div>
-      <p>Iconic Cities</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-mountain"></i></div>
-      <p>Mountains</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-brands fa-fort-awesome"></i></div>
-      <p>Castles</p>
-    </div>
-    <!-- <div class="filter">
-      <div><i class="fa-regular fa-snowflake"></i></div>
-      <p>Arctic</p>
-    </div> -->
-    <div class="filter">
-      <div><i class="fa-solid fa-campground"></i></div>
-      <p>Camping</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-cow"></i></div>
-      <p>Farms</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-person-swimming"></i></div>
-      <p>Amazing Pools</p>
-    </div>
-    <div class="filter">
-      <div><i class="fa-solid fa-ship"></i></div>
-      <p>Boats</p>
-    </div>
-    <div class="tax-toggle">
-      <div class="form-check-reverse form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-        <label class="form-check-label" for="flexSwitchCheckDefault">Display total after Taxes</label>
-      </div>
-    </div>
-  
-    
-  </div>
-
-  
-
+  <section aria-label="Search results" class="mt-4">
+    <h1>Find your next stay</h1>
+    <p><a href="/ai/stay-finder">Try the AI stay finder</a> or use the filters below.</p>
+    <% if (aiSearch) { %><div class="alert alert-info" role="status">AI filled in these filters. Check them before choosing a stay. Dates, amenities and guest capacity were not checked.</div><% } %>
+    <form action="/listings" method="GET" class="search-filters" aria-label="Filter stays">
+      <div><label for="destination">Destination or stay name</label><input class="form-control" id="destination" name="q" maxlength="100" value="<%= filters.q %>" placeholder="City, country or stay name"></div>
+      <div><label for="min-price">Min / night (INR)</label><input class="form-control" id="min-price" name="minPrice" type="number" min="0" max="10000000" step="0.01" value="<%= filters.minPrice ?? '' %>"></div>
+      <div><label for="max-price">Max / night (INR)</label><input class="form-control" id="max-price" name="maxPrice" type="number" min="0" max="10000000" step="0.01" value="<%= filters.maxPrice ?? '' %>"></div>
+      <div><label for="sort">Sort by</label><select class="form-select" id="sort" name="sort"><% for (const [value, label] of [['newest','Newest'],['price-asc','Price: low to high'],['price-desc','Price: high to low']]) { %><option value="<%= value %>" <%= filters.sort === value ? 'selected' : '' %>><%= label %></option><% } %></select></div>
+      <button class="btn btn-dark" type="submit">Find stays</button><a href="/listings">Clear filters</a>
+    </form>
+    <p class="text-muted mt-2">Prices are per night before tax. Listings do not confirm date availability, guest capacity or amenities.</p>
+    <% if (filters.q) { %><p>Results for "<%= filters.q %>"</p><% } %>
+    <p role="status"><%= total %> stay<%= total === 1 ? "" : "s" %> found</p>
+    <% if (!allListings.length) { %><p>No stays match these filters. Try another destination or <a href="/listings">clear all filters</a>.</p><% } %>
+  </section>
   <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
     <% for (let listing of allListings) { %>
       <a href="/listings/<%= listing._id %>" class="listing-link">
         <div class="card col">
           <!-- Dynamic image URL with fallback -->
-          <img src="<%= listing.image?.url || '/default-image.jpg' %>" 
-               class="card-img-top" 
+          <img src="<%= listing.image?.url || '/images/stay-placeholder.svg' %>"
+               class="card-img-top"
                alt="<%= listing.title || 'Listing Image' %>"
-               style="height: 20rem;" 
-               onerror="this.onerror=null; this.src='/default-image.jpg';" />
-               
+               loading="lazy" decoding="async" width="800" height="600" style="height: 20rem;"
+               onerror="this.onerror=null; this.src='/images/stay-placeholder.svg';" />
+
           <div class="card-img-overlay"></div>
           <div class="card-body">
             <p class="card-text">
               <b><%= listing.title || 'Untitled Listing' %></b> <br/>
               <!-- Fallback for missing price -->
-              &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : 'Price not available' %> / night
-              <i class="tax-info">&nbsp; &nbsp; +18% GST</i>
+              &#8377; <%= listing.price != null ? listing.price.toLocaleString("en-IN") : 'Price not available' %> / night
+              <br><span class="text-muted"><%= listing.location %>, <%= listing.country %></span>
             </p>
           </div>
         </div>
       </a>
     <% } %>
   </div>
-</body>
-
-<script>
-  let taxSwitch = document.getElementById("flexSwitchCheckDefault");
-  taxSwitch.addEventListener("click", ()  => {
-    let taxInfo = document.getElementsByClassName("tax-info");
-  for (info of taxInfo) {
-    if (info.style.display != "inline") {
-      info.style.display = "inline";
-    } else {
-      info.style.display = "none";
-    }
-  }
-  }) ;
-</script>
+<% if (pageCount > 1) { %>
+<nav aria-label="Results pages" class="d-flex gap-3 my-4">
+  <% if (filters.page > 1) { %><a rel="prev" href="<%= pageUrl(filters.page - 1) %>">Previous</a><% } %>
+  <span>Page <%= filters.page %> of <%= pageCount %></span>
+  <% if (filters.page < pageCount) { %><a rel="next" href="<%= pageUrl(filters.page + 1) %>">Next</a><% } %>
+</nav>
+<% } %>

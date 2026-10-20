@@ -23,6 +23,10 @@ const reviewRouter = require("./routes/review");
 const userRouter = require("./routes/user");
 
 const app = express();
+app.locals.safeJson = require("./utils/safeJson");
+const sessionConfig = require("./utils/sessionConfig")(process.env);
+if (process.env.NODE_ENV === "production") app.set("trust proxy", 1);
+app.disable("x-powered-by");
 
 // Database connection
 const dbUrl = process.env.ATLASDB_URL || "mongodb://localhost:27017/mydatabase";
@@ -44,14 +48,14 @@ app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 
 // Middleware
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: "32kb", parameterLimit: 50 }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Session Store Configuration
 const store = MongoStore.create({
   mongoUrl: dbUrl,
-  crypto: { secret: process.env.SECRET || "fallback_secret" },
+  crypto: { secret: sessionConfig.secret },
   touchAfter: 24 * 3600, // Update session every 24 hours
 });
 
@@ -60,17 +64,7 @@ store.on("error", (err) => {
 });
 
 // Session Configuration
-const sessionOptions = {
-  store,
-  secret: process.env.SECRET || "fallback_secret",
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-  },
-};
+const sessionOptions = { ...sessionConfig, store };
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -91,6 +85,7 @@ app.use((req, res, next) => {
 });
 
 // Route handlers
+app.use("/ai", require("./routes/ai").createAIRouter());
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
@@ -102,12 +97,15 @@ app.all("*", (req, res, next) => {
 
 // Global Error Handler
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message = "Something went wrong!" } = err;
-  res.status(statusCode).render("error.ejs", { message });
+  const { status, message } = require("./utils/publicError")(err);
+  res.status(status).render("error.ejs", { message });
 });
 
-// Start server
+// Start server only when run directly; Vercel imports the app instead.
 const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`🚀 Server is running on port ${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`🚀 Server is running on port ${port}`);
+  });
+}
+module.exports = app;
