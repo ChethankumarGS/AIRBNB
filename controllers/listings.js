@@ -1,8 +1,10 @@
 const Listing = require("../models/listing");
 const { cleanListing } = require("../utils/validateListing");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
-const mapToken = process.env.MAP_TOKEN;
-const geocodingClient = mbxGeocoding({ accessToken: mapToken });
+function geocodingClient() {
+  if (!process.env.MAP_TOKEN) throw new (require("../utils/ExpressError"))(503, "Location lookup is not configured. Try again later.");
+  return mbxGeocoding({ accessToken: process.env.MAP_TOKEN });
+}
 
 const { parseFilters, buildQuery, SORTS, PAGE_SIZE } = require("../services/listingSearch");
 module.exports.index = async (req, res) => {
@@ -46,7 +48,7 @@ module.exports.showListing = async (req, res) => {
 module.exports.createListing = async (req, res) => {
   const details = cleanListing(req.body.listing);
   if (!req.file) throw new (require("../utils/ExpressError"))(400, "Upload a listing image.");
-  const geometry = await require("../utils/geocodeListing")(geocodingClient, details);
+  const geometry = await require("../utils/geocodeListing")(geocodingClient(), details);
 
   let url = req.file.path;
   let filename = req.file.filename;
@@ -78,7 +80,7 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateListing = async (req, res, next) => {
   const { id } = req.params;
   const details = cleanListing(req.body.listing);
-  const geometry = await require("../utils/geocodeListing")(geocodingClient, details);
+  const geometry = await require("../utils/geocodeListing")(geocodingClient(), details);
   let listing = await Listing.findByIdAndUpdate(id, { $set: { ...details, geometry } }, { new: true, runValidators: true });
 
   if (!listing) throw new (require("../utils/ExpressError"))(404, "Listing not found.");

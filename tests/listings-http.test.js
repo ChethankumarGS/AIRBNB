@@ -1,5 +1,5 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const express=require('express');const path=require('node:path');
-process.env.MAP_TOKEN='pk.local-test';
+delete process.env.MAP_TOKEN;
 const Listing=require('../models/listing');const controller=require('../controllers/listings');
 test('destination, price, sorting and pagination reach the database safely',async t=>{
  let query,sort,skip,limit;
